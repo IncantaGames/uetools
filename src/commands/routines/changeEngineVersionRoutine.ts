@@ -1,26 +1,15 @@
-import * as vscode from "vscode";
+import vscode from "vscode";
 
-export const changeEngineVersionRoutine = (): Promise<boolean> => {
-  return new Promise<boolean>((resolve, reject) => {
-    (async () => {
-      await (
-        vscode.commands.executeCommand(
-          "uetools.changeEngineVersion"
-        ) as Promise<boolean>
-      )
-        .then(() =>
-          vscode.commands.executeCommand("uetools.checkUnrealProject")
-        )
-        .then(() =>
-          vscode.commands.executeCommand(
-            "uetools.generateProjectFilesAndCompileCommands"
-          )
-        )
-        .catch((reason) => {
-          console.log(reason);
-          vscode.window.showErrorMessage(reason.message);
-          reject(reason);
-        });
-    })();
-  });
-};
+export async function changeEngineVersionRoutine(): Promise<void> {
+  try {
+    await vscode.commands.executeCommand("uetools.changeEngineVersion");
+    await vscode.commands.executeCommand("uetools.checkUnrealProject");
+    await vscode.commands.executeCommand(
+      "uetools.generateProjectFilesAndCompileCommands"
+    );
+  } catch (reason: any) {
+    console.log(reason);
+    vscode.window.showErrorMessage(reason.message);
+    throw reason;
+  }
+}

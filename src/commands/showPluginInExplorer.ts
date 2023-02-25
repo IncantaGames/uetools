@@ -1,12 +1,11 @@
-import * as vscode from "vscode";
+import vscode from "vscode";
 import { UnrealEnginePlugin } from "../types";
 import { Context } from "../helpers/context";
-import * as path from "path";
-import { resolveCliArgsFromVSCodeExecutablePath } from "@vscode/test-electron";
+import path from "path";
 
-export const showPluginInExplorer = (args: {
+export function showPluginInExplorer(args: {
   plugin: UnrealEnginePlugin;
-}): void => {
+}): void {
   const projectFolder = Context.get("projectFolder") as string;
   // focus plugin folder in folder view
   vscode.commands.executeCommand(
@@ -19,4 +18,4 @@ export const showPluginInExplorer = (args: {
       )
     )
   );
-};
+}

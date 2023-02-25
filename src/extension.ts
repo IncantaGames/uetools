@@ -1,4 +1,4 @@
-import * as vscode from "vscode";
+import vscode from "vscode";
 
 import checkUnrealProject from "./commands/checkUnrealProject";
 import {
@@ -9,7 +9,6 @@ import { detectUnrealEngineInstallation } from "./commands/detectUnrealEngineIns
 import { generateCompileCommands } from "./commands/generateCompileComands";
 import { Context } from "./helpers/context";
 import { ActiveProjectStatusBarItem } from "./StatusBarItems/ActiveProject";
-import * as path from "path";
 import { ProjectViewController } from "./components/uetools/project/controller";
 import { ModulesViewController } from "./components/uetools/modules/controller";
 import { openProjectEditor } from "./commands/openProjectEditor";
