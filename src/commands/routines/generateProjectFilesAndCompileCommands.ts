@@ -1,23 +1,12 @@
-import * as vscode from "vscode";
-import { Context } from "../../helpers/context";
-import { UnrealEngineProject } from "../../types";
+import vscode from "vscode";
 
-export const generateProjectFilesAndCompileCommands = (): Promise<boolean> => {
-  return new Promise<boolean>((resolve, reject) => {
-    (async () => {
-      await (
-        vscode.commands.executeCommand(
-          "uetools.generateProjectFiles"
-        ) as Promise<boolean>
-      )
-        .then(() =>
-          vscode.commands.executeCommand("uetools.generateCompileCommands")
-        )
-        .catch((reason) => {
-          console.log(reason);
-          vscode.window.showErrorMessage(reason.message);
-          reject(reason);
-        });
-    })();
-  });
-};
+export async function generateProjectFilesAndCompileCommands(): Promise<void> {
+  try {
+    await vscode.commands.executeCommand("uetools.generateProjectFiles");
+    await vscode.commands.executeCommand("uetools.generateCompileCommands");
+  } catch (reason: any) {
+    console.log(reason);
+    vscode.window.showErrorMessage(reason.message);
+    throw reason;
+  }
+}
