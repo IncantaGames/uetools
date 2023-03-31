@@ -52,11 +52,6 @@
           "type": "webview",
           "id": "uetools.project",
           "name": "Project"
-        },
-        {
-          "type": "webview",
-          "id": "uetools.modules",
-          "name": "Modules"
         }
       ]
     },
