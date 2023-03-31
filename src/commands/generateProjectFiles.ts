@@ -9,7 +9,7 @@ export async function generateProjectFiles(): Promise<void> {
   // check for project in the context
   const project = Context.get("project") as UnrealEngineProject;
   if (!project) {
-    throw new Error("No project found");
+    throw new Error("Unreal Engine Tools: no project found");
   }
 
   await vscode.commands.executeCommand(
@@ -24,7 +24,7 @@ export async function generateProjectFiles(): Promise<void> {
   const runtimePath = Context.get("runtimePath") as string;
   const projectFolder = Context.get("projectFolder") as string;
   vscode.window.showInformationMessage(
-    `Generating project files for ${project.Modules[0].Name}`
+    `Generating project files for ${project.Name}`
   );
 
   // Create task to generate project files
@@ -37,7 +37,7 @@ export async function generateProjectFiles(): Promise<void> {
     shellCommand = new vscode.ShellExecution(
       `"${unrealBuildToolPath}" -mode=GenerateProjectFiles -project="${path.join(
         projectFolder,
-        project.Modules[0].Name
+        project.Name
       )}.uproject" ${project.Modules[0].Name}Editor ${buildOsType} Development`,
       { cwd: unrealEngineInstallation, executable: runtimePath }
     );
@@ -47,7 +47,7 @@ export async function generateProjectFiles(): Promise<void> {
       `${runtimePath.split(" ").join("\\ ")} ${unrealBuildToolPath
         .split(" ")
         .join("\\ ")} -mode=GenerateProjectFiles -project=${path
-        .join(projectFolder, project.Modules[0].Name)
+        .join(projectFolder, project.Name)
         .split(" ")
         .join("\\ ")}.uproject ${
         project.Modules[0].Name
@@ -60,7 +60,7 @@ export async function generateProjectFiles(): Promise<void> {
       `${runtimePath.split(" ").join("\\ ")} ${unrealBuildToolPath
         .split(" ")
         .join("\\ ")} -mode=GenerateProjectFiles -project=${path
-        .join(projectFolder, project.Modules[0].Name)
+        .join(projectFolder, project.Name)
         .split(" ")
         .join("\\ ")}.uproject ${
         project.Modules[0].Name
@@ -90,7 +90,7 @@ export async function generateProjectFiles(): Promise<void> {
     vscode.tasks.onDidEndTask((e) => {
       if (e.execution.task === execution.task) {
         vscode.window.showInformationMessage(
-          `Project files generated for ${project.Modules[0].Name}`
+          `Project files generated for ${project.Name}`
         );
         console.log("End: generateProjectFiles");
         resolve();

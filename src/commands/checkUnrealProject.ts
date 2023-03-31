@@ -23,6 +23,7 @@ export default async function checkUnrealProject(): Promise<boolean> {
               "utf8"
             )
           ) as UnrealEngineProject;
+          project.Name = file.replace(".uproject", "");
 
           // if Plugins folder exists, check each subfolder for a .uplugin file
           if (fs.existsSync(path.join(folder.uri.fsPath, "Plugins"))) {
@@ -53,9 +54,13 @@ export default async function checkUnrealProject(): Promise<boolean> {
           Context.set("project", project);
 
           // notify the user that the workspace is a valid Unreal Engine project
-          vscode.window.showInformationMessage(
-            `Unreal Engine project ${project.Modules[0].Name} found associated with Engine Version: ${project.EngineAssociation}.`
-          );
+          const message = `Unreal Engine project ${project.Name} found associated with Engine Version: ${project.EngineAssociation}.`;
+          if (
+            vscode.workspace.getConfiguration().get<boolean>("uetools.debug")
+          ) {
+            vscode.window.showInformationMessage(message);
+          }
+          console.log(message);
 
           // save the project information in vscode workspace settings
           vscode.workspace

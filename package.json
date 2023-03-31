@@ -37,6 +37,11 @@
             "type": "string",
             "description": "Path to search for Unreal Engine installations",
             "default": ""
+          },
+          "uetools.debug": {
+            "type": "boolean",
+            "description": "Show debug information popups",
+            "default": false
           }
         }
       }

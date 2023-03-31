@@ -27,6 +27,7 @@ export interface UnrealEnginePlugin {
 
 // Unreal Engine project struct
 export interface UnrealEngineProject {
+  Name: string;
   Description: string;
   Categories: string[];
   Modules: UnrealModule[];

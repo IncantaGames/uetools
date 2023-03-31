@@ -11,7 +11,7 @@ export async function generateCompileCommands(): Promise<void> {
   // check for project in global state context
   const project = Context.get("project") as UnrealEngineProject;
   if (!project) {
-    throw new Error("No project found");
+    throw new Error("Unreal Engine Tools: no project found");
   }
 
   // check for unreal engine installation
@@ -43,7 +43,7 @@ export async function generateCompileCommands(): Promise<void> {
     shellCommand = new vscode.ShellExecution(
       `"${unrealBuildToolPath}" -mode=GenerateClangDatabase -project=${path.join(
         projectFolder,
-        project.Modules[0].Name
+        project.Name
       )}.uproject ${project.Modules[0].Name}Editor ${buildOsType} Development`,
       { cwd: unrealEngineInstallation, executable: runtimePath }
     );
@@ -53,7 +53,7 @@ export async function generateCompileCommands(): Promise<void> {
       `${runtimePath.split(" ").join("\\ ")} ${unrealBuildToolPath
         .split(" ")
         .join("\\ ")} -mode=GenerateClangDatabase -project=${path
-        .join(projectFolder, project.Modules[0].Name)
+        .join(projectFolder, project.Name)
         .split(" ")
         .join("\\ ")}.uproject ${
         project.Modules[0].Name
@@ -66,7 +66,7 @@ export async function generateCompileCommands(): Promise<void> {
       `${runtimePath.split(" ").join("\\ ")} ${unrealBuildToolPath
         .split(" ")
         .join("\\ ")} -mode=GenerateClangDatabase -project=${path
-        .join(projectFolder, project.Modules[0].Name)
+        .join(projectFolder, project.Name)
         .split(" ")
         .join("\\ ")}.uproject ${
         project.Modules[0].Name
@@ -104,7 +104,7 @@ export async function generateCompileCommands(): Promise<void> {
         );
         if (!fs.existsSync(newCompileCommandsFile)) {
           vscode.window.showErrorMessage(
-            `Could not generate compile_commands.json for ${project.Modules[0].Name}. Intelisense may not work for clangd.`
+            `Could not generate compile_commands.json for ${project.Name}. Intelisense may not work for clangd.`
           );
           console.log("End: generateCompileCommands");
           return;

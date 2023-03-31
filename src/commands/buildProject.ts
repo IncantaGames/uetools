@@ -7,7 +7,7 @@ export async function buildProject(): Promise<void> {
   // check for project in the context
   const project = Context.get("project") as UnrealEngineProject;
   if (!project) {
-    throw new Error("No project found");
+    throw new Error("Unreal Engine Tools: no project found");
   }
 
   // check for unreal engine installation
@@ -29,7 +29,7 @@ export async function buildProject(): Promise<void> {
     shellCommand = new vscode.ShellExecution(
       `"${unrealBuildToolPath}" -mode=Build -ForceHotReload -project="${path.join(
         projectFolder,
-        project.Modules[0].Name
+        project.Name
       )}.uproject" ${project.Modules[0].Name}Editor ${buildOsType} Development`,
       { cwd: unrealEngineInstallation, executable: runtimePath }
     );
@@ -39,7 +39,7 @@ export async function buildProject(): Promise<void> {
       `${runtimePath.split(" ").join("\\ ")} ${unrealBuildToolPath
         .split(" ")
         .join("\\ ")} -mode=Build -ForceHotReload -project=${path
-        .join(projectFolder, project.Modules[0].Name)
+        .join(projectFolder, project.Name)
         .split(" ")
         .join("\\ ")}.uproject ${
         project.Modules[0].Name
@@ -52,7 +52,7 @@ export async function buildProject(): Promise<void> {
       `${runtimePath.split(" ").join("\\ ")} ${unrealBuildToolPath
         .split(" ")
         .join("\\ ")} -mode=Build -ForceHotReload -project=${path
-        .join(projectFolder, project.Modules[0].Name)
+        .join(projectFolder, project.Name)
         .split(" ")
         .join("\\ ")}.uproject ${
         project.Modules[0].Name
@@ -82,7 +82,7 @@ export async function buildProject(): Promise<void> {
     vscode.tasks.onDidEndTask((e) => {
       if (e.execution.task === execution.task) {
         vscode.window.showInformationMessage(
-          `Project ${project.Modules[0].Name} build completed`
+          `Project ${project.Name} build completed`
         );
         console.log("End: generateProjectFiles");
         resolve();

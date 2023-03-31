@@ -68,7 +68,7 @@ function getEngineFolderViaSearch(project: UnrealEngineProject): string {
 
   if (!engineFolder) {
     throw new Error(
-      `Unreal Engine ${project.EngineAssociation} not found in ${unrealEngineInstallationSearchPath}`
+      `Unreal Engine Tools: ${project.EngineAssociation} not found in ${unrealEngineInstallationSearchPath}`
     );
   }
 
@@ -80,7 +80,7 @@ export async function detectUnrealEngineInstallation(): Promise<void> {
   const project = Context.get("project") as UnrealEngineProject;
 
   if (!project) {
-    throw new Error("No project found");
+    throw new Error("Unreal Engine Tools: no project found");
   }
 
   // check operating system
@@ -93,7 +93,9 @@ export async function detectUnrealEngineInstallation(): Promise<void> {
   }
 
   if (!fs.existsSync(engineFolder)) {
-    throw new Error(`The detected folder '${engineFolder}' does not exist.`);
+    throw new Error(
+      `Unreal Engine Tools: the detected folder '${engineFolder}' does not exist.`
+    );
   }
 
   Context.set("unrealEngineInstallation", engineFolder);
@@ -193,12 +195,13 @@ export async function detectUnrealEngineInstallation(): Promise<void> {
       )
     );
   } else {
-    throw new Error(`Unsupported operating system: ${os}`);
+    throw new Error(`Unreal Engine Tools: Unsupported operating system: ${os}`);
   }
 
   // Notify user the selected unreal engine installation
-  vscode.window.showInformationMessage(
-    `Unreal Engine installation ${engineFolder} selected.`
-  );
-  console.log(`Unreal Engine installation selected.`);
+  const message = `Unreal Engine installation ${engineFolder} selected.`;
+  if (vscode.workspace.getConfiguration().get<boolean>("uetools.debug")) {
+    vscode.window.showInformationMessage(message);
+  }
+  console.log(message);
 }

@@ -28,7 +28,7 @@ const ProjectDetailsPanel = styled.div`
   flex-grow: 2;
   padding: 10px;
   border-radius: 5px;
-  background-color: #00000099;
+  background-color: #000000d1;
 `;
 
 // Splash background image and fit to the div
@@ -73,17 +73,43 @@ const Text = styled.p`
   margin: 0;
 `;
 
+const FakeLink = styled.span`
+  color: #3794d1;
+  cursor: pointer;
+
+  &:hover {
+    color: #50b0f0;
+  }
+`;
+
+const OpenButton = styled.img`
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  cursor: pointer;
+  opacity: 0.7;
+
+  &:hover {
+    opacity: 1;
+  }
+`;
+
 // Bootstrap like blue button
 const Button = styled.button`
-  background-color: #007bff;
-  border-color: #007bff;
+  background-color: #0e639c;
   color: white;
-  border-radius: 5px;
-  padding: 5px 10px;
-  margin: 5px;
-  font-size: 0.8em;
-  font-weight: bold;
+  border: 1px solid var(--vscode-button-border, transparent);
+  padding: 0.25rem 0;
+  margin-top: 0.5rem;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 13px;
   cursor: pointer;
+  width: 15rem;
+
+  &:hover {
+    background-color: #1177bb;
+  }
 `;
 
 const ButtonsWrapper = styled.div`
@@ -96,10 +122,7 @@ const ButtonsWrapper = styled.div`
   width: 100%;
   height: 100%;
   overflow: hidden;
-  border-radius: 5px;
-  margin-bottom: 10px;
-  background-color: #333333;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+  margin-top: 1rem;
 `;
 
 export const Project = () => {
@@ -130,6 +153,13 @@ export const Project = () => {
     });
   };
 
+  const onRebuildEngineCppIndex = () => {
+    VSCodeWrapper.postMessage({
+      type: "runCommand",
+      command: "uetools.rebuildEngineCppIndex",
+    });
+  };
+
   const onBuildProject = () => {
     VSCodeWrapper.postMessage({
       type: "runCommand",
@@ -145,25 +175,58 @@ export const Project = () => {
             VSCodeWrapper.extensionUri + encodeURI(`/res/images/uesplash.jpg`)
           }
         />
-        <ProjectThumbnail
-          img={
-            VSCodeWrapper.workspaceUri +
-            encodeURI(`/${project?.Modules[0].Name}.png`)
-          }
-          width={100}
-          height={100}
-        />
-        <ProjectDetailsPanel>
-          <ProjectTitle>{project?.Modules[0].Name}</ProjectTitle>
-          <Text>Unreal Engine {project?.EngineAssociation}</Text>
-        </ProjectDetailsPanel>
+        {project && (
+          <>
+            <ProjectThumbnail
+              img={
+                VSCodeWrapper.workspaceUri + encodeURI(`/${project.Name}.png`)
+              }
+              width={100}
+              height={100}
+            />
+            <ProjectDetailsPanel>
+              <OpenButton
+                src={
+                  VSCodeWrapper.extensionUri +
+                  encodeURI(`/res/icons/arrow-up-right-from-square-solid.png`)
+                }
+                width={14}
+                height={14}
+                title="Open in Unreal Editor (Development, without debugging)"
+                onClick={onOpenProject}
+              />
+              <ProjectTitle>{project.Name}</ProjectTitle>
+              <Text>
+                UE v{project.EngineAssociation}{" "}
+                <FakeLink onClick={onChangeEngineVersion}>(change)</FakeLink>
+              </Text>
+              <Text>
+                <FakeLink onClick={onRebuildEngineCppIndex}>
+                  Rebuild Engine C++ Index
+                </FakeLink>
+              </Text>
+            </ProjectDetailsPanel>
+          </>
+        )}
+        {typeof project === "undefined" && (
+          <>
+            <ProjectDetailsPanel>
+              <ProjectTitle>No Project Found</ProjectTitle>
+              <Text>
+                A .uproject file was not found in any of the workspace folders.
+              </Text>
+            </ProjectDetailsPanel>
+          </>
+        )}
       </DescriptionPanel>
-      <ButtonsWrapper>
-        <Button onClick={onOpenProject}>Open in Unreal Editor</Button>
-        <Button onClick={onChangeEngineVersion}>Change Engine Version</Button>
-        <Button onClick={onGenerateProjectFiles}>Generate Project Files</Button>
-        <Button onClick={onBuildProject}>Build</Button>
-      </ButtonsWrapper>
+      {project && (
+        <ButtonsWrapper>
+          <Button onClick={onGenerateProjectFiles}>
+            Generate Project Files
+          </Button>
+          <Button onClick={onBuildProject}>Build</Button>
+        </ButtonsWrapper>
+      )}
     </>
   );
 };

@@ -7,7 +7,7 @@ export async function buildModule(args: { moduleName: string }): Promise<void> {
   // check for project in the context
   const project = Context.get("project") as UnrealEngineProject;
   if (!project) {
-    throw new Error("No project found");
+    throw new Error("Unreal Engine Tools: no project found");
   }
 
   // check module name
